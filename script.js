@@ -3,28 +3,68 @@ const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
 
 navToggle.addEventListener("click", () => {
-  navLinks.classList.toggle("open");
+  const isOpen = navLinks.classList.toggle("mobile-open");
+  navToggle.classList.toggle("open", isOpen);
+  navToggle.setAttribute("aria-expanded", String(isOpen));
 });
 navLinks.addEventListener("click", (e) => {
-  if (e.target.tagName === "A") navLinks.classList.remove("open");
+  if (e.target.tagName === "A") {
+    navLinks.classList.remove("mobile-open");
+    navToggle.classList.remove("open");
+    navToggle.setAttribute("aria-expanded", "false");
+  }
 });
 
 // ===== footer year =====
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// ===== lightbox =====
+// ===== gallery filters =====
+const filterPills = Array.from(document.querySelectorAll(".filter-pill"));
+const figures = Array.from(document.querySelectorAll("#grid figure"));
+const emptyState = document.getElementById("emptyState");
+
+function applyFilter(filter) {
+  let visibleCount = 0;
+  figures.forEach((fig) => {
+    const match = filter === "all" || fig.dataset.category === filter;
+    fig.classList.toggle("filtered-out", !match);
+    if (match) visibleCount++;
+  });
+  emptyState.hidden = visibleCount > 0;
+}
+
+filterPills.forEach((pill) => {
+  pill.addEventListener("click", () => {
+    filterPills.forEach((p) => {
+      p.classList.remove("active");
+      p.setAttribute("aria-selected", "false");
+    });
+    pill.classList.add("active");
+    pill.setAttribute("aria-selected", "true");
+    applyFilter(pill.dataset.filter);
+  });
+});
+
+// ===== lightbox (only cycles through currently visible/filtered images) =====
 const lightbox = document.getElementById("lightbox");
 const lbImg = document.getElementById("lbImg");
 const lbClose = document.getElementById("lbClose");
 const lbPrev = document.getElementById("lbPrev");
 const lbNext = document.getElementById("lbNext");
 
-const images = Array.from(document.querySelectorAll("[data-gallery] img"));
 let current = -1;
 
+function visibleImages() {
+  return figures
+    .filter((fig) => !fig.classList.contains("filtered-out"))
+    .map((fig) => fig.querySelector("img"));
+}
+
 function show(index) {
-  current = (index + images.length) % images.length;
-  const img = images[current];
+  const imgs = visibleImages();
+  if (!imgs.length) return;
+  current = (index + imgs.length) % imgs.length;
+  const img = imgs[current];
   lbImg.src = img.src;
   lbImg.alt = img.alt;
   lightbox.classList.add("open");
@@ -39,8 +79,12 @@ function close() {
   lbImg.src = "";
 }
 
-images.forEach((img, i) => {
-  img.closest("figure").addEventListener("click", () => show(i));
+figures.forEach((fig) => {
+  fig.addEventListener("click", () => {
+    const imgs = visibleImages();
+    const img = fig.querySelector("img");
+    show(imgs.indexOf(img));
+  });
 });
 
 lbClose.addEventListener("click", close);
