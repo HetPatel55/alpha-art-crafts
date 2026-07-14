@@ -1,3 +1,11 @@
+// ===== back to top =====
+// Explicit scroll (rather than relying on the native #top anchor jump,
+// which sticky-positioned headers can make unreliable) so this always works.
+document.getElementById("backToTop").addEventListener("click", (e) => {
+  e.preventDefault();
+  document.getElementById("top").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
 // ===== mobile nav =====
 const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
@@ -33,16 +41,25 @@ function applyFilter(filter) {
   emptyState.hidden = visibleCount > 0;
 }
 
-filterPills.forEach((pill) => {
-  pill.addEventListener("click", () => {
-    filterPills.forEach((p) => {
-      p.classList.remove("active");
-      p.setAttribute("aria-selected", "false");
-    });
-    pill.classList.add("active");
-    pill.setAttribute("aria-selected", "true");
-    applyFilter(pill.dataset.filter);
+function selectFilter(filter) {
+  const pill = document.querySelector(`.filter-pill[data-filter="${filter}"]`);
+  if (!pill) return;
+  filterPills.forEach((p) => {
+    p.classList.remove("active");
+    p.setAttribute("aria-selected", "false");
   });
+  pill.classList.add("active");
+  pill.setAttribute("aria-selected", "true");
+  applyFilter(filter);
+}
+
+filterPills.forEach((pill) => {
+  pill.addEventListener("click", () => selectFilter(pill.dataset.filter));
+});
+
+// footer quick-links jump to the gallery pre-filtered to that category
+document.querySelectorAll("[data-filter-link]").forEach((link) => {
+  link.addEventListener("click", () => selectFilter(link.dataset.filterLink));
 });
 
 // ===== lightbox (only cycles through currently visible/filtered images) =====
