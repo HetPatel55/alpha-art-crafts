@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Gallery from "@/components/Gallery";
 import { EnquiryBanner, PageHero } from "@/components/Sections";
-import { designPhotos } from "@/data/gallery";
+import { designPhotos, designThemes } from "@/data/gallery";
 
 export const metadata: Metadata = {
   title: "Design Library",
@@ -15,12 +15,12 @@ export default function DesignLibraryPage() {
       <PageHero eyebrow="Design library" title={<>Pick a design. <em className="text-clay">We&apos;ll carve it</em> to your size.</>}>
         <p>
           A catalogue of {designPhotos.length} relief designs — florals, branches, cranes, waves and abstract
-          textures. Each has a code: tap <strong className="font-semibold text-walnut">Enquire</strong> to send it
-          to us on WhatsApp and we&apos;ll reply with sizes, finishes and a quote.
+          textures. Tap <strong className="font-semibold text-walnut">♡</strong> to shortlist the ones you like, then send
+          them to us on WhatsApp for sizes, finishes and a quote.
         </p>
       </PageHero>
       <section className="container-x py-6 md:py-20">
-        <Gallery photos={designPhotos} designs />
+        <Gallery photos={designPhotos} filters={designThemes} designs />
       </section>
       <EnquiryBanner
         title="Have your own design in mind?"

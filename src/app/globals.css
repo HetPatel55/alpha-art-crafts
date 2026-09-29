@@ -208,6 +208,31 @@
   animation: tile-in 0.6s var(--ease-soft) both;
 }
 
+@keyframes page-next {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+}
+@keyframes page-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+}
+.animate-page-next {
+  animation: page-next 0.45s var(--ease-soft) both;
+}
+.animate-page-prev {
+  animation: page-prev 0.45s var(--ease-soft) both;
+}
+
+@keyframes heart-pop {
+  40% {
+    transform: scale(1.35);
+  }
+}
+
 @keyframes marquee {
   to {
     transform: translateX(-50%);
@@ -240,7 +265,9 @@
   }
   .animate-marquee,
   .animate-hero-zoom,
-  .animate-tile-in {
+  .animate-tile-in,
+  .animate-page-next,
+  .animate-page-prev {
     animation: none;
   }
 }
@@ -253,6 +280,11 @@
   font-family: var(--font-display);
   font-size: 1.35rem;
   font-weight: 500;
+}
+
+/* Keep the photo clear of the action panel at the bottom of the viewer (Gallery.tsx) */
+.aac-lightbox .yarl__slide {
+  padding-bottom: 10.5rem;
 }
 
 /* Lightbox on phones: slimmer thumbnail strip */

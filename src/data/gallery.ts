@@ -8,8 +8,12 @@ export type Photo = {
   height: number;
   blur: string;
   title: string;
+  /** Short reference customers can quote on WhatsApp, e.g. "AAC-R05". */
+  code: string;
   /** Extra collections this photo should also appear in. */
   also: string[];
+  /** Everything a gallery filter can match: folder, `also` collections and design themes. */
+  tags: string[];
 };
 
 export type Collection = {
@@ -104,20 +108,76 @@ const captions: Record<string, { title: string; also?: string[] }> = {
   "workshop-10": { title: "Elephant toran header with floral cutwork", also: ["doors-entryways"] },
   "workshop-11": { title: "Radha Krishna roundel with rose border", also: ["religious-art"] },
   "workshop-12": { title: "Banyan tree roundel in pink", also: ["wall-panels"] },
+
+  // Design library — `also` holds the theme used by the filters on /design-library
+  "design-01": { title: "Flowing ribbon waves, tall panel", also: ["abstract"] },
+  "design-02": { title: "Crumpled silk texture", also: ["abstract"] },
+  "design-03": { title: "Blossom branch across three panels", also: ["branches"] },
+  "design-04": { title: "Tropical leaves with birds", also: ["florals"] },
+  "design-05": { title: "Calla lily cluster", also: ["florals"] },
+  "design-06": { title: "Drifting stone ribbon", also: ["abstract"] },
+  "design-07": { title: "Soft vertical waves", also: ["abstract"] },
+  "design-08": { title: "Serene faces with brush strokes", also: ["motifs"] },
+  "design-09": { title: "Sand dune texture in terracotta", also: ["abstract"] },
+  "design-10": { title: "Tropical garden with palms and flowers", also: ["florals"] },
+  "design-11": { title: "Flowing grass lines", also: ["abstract"] },
+  "design-12": { title: "Drifting ribbon on warm beige", also: ["abstract"] },
+  "design-13": { title: "Cherry blossom branch", also: ["branches"] },
+  "design-14": { title: "Blossom branches, four-panel set", also: ["branches"] },
+  "design-15": { title: "Contour line waves", also: ["abstract"] },
+  "design-16": { title: "Ganesha and sacred symbols mosaic", also: ["motifs"] },
+  "design-17": { title: "Wild poppy stems", also: ["florals"] },
+  "design-18": { title: "Dense dahlia bloom", also: ["florals"] },
+  "design-19": { title: "Pebbled jaali screen pair", also: ["abstract"] },
+  "design-20": { title: "Woven textile pattern", also: ["abstract"] },
+  "design-21": { title: "Layered terrain waves", also: ["abstract"] },
+  "design-23": { title: "Meadow of wild flowers, line relief", also: ["florals"] },
+  "design-24": { title: "Ripple circles in sage", also: ["abstract"] },
+  "design-25": { title: "Garden border of roses and leaves", also: ["florals"] },
+  "design-27": { title: "Blossom branch on sage", also: ["branches"] },
+  "design-28": { title: "Cranes under arches", also: ["motifs"] },
+  "design-32": { title: "Floral mandala medallion", also: ["motifs"] },
 };
+
+/** Themes used to filter the design library. */
+export const designThemes = [
+  { slug: "florals", title: "Florals" },
+  { slug: "branches", title: "Branches & Blossoms" },
+  { slug: "abstract", title: "Abstract & Waves" },
+  { slug: "motifs", title: "Motifs & Sacred" },
+];
+
+/** Letter used in each photo's code: AAC-R05 = religious art #5, AAC-D12 = design #12… */
+const codePrefix: Record<string, string> = {
+  "religious-art": "R",
+  "wall-panels": "W",
+  "doors-entryways": "E",
+  furniture: "F",
+  lifestyle: "L",
+  workshop: "S",
+  "design-library": "D",
+};
+
+function photoCode(id: string, category: string) {
+  return `AAC-${codePrefix[category] ?? "X"}${id.replace(/\D/g, "").padStart(2, "0")}`;
+}
 
 export const photos: Photo[] = manifest.map((p) => {
   const caption = captions[p.id];
+  const code = photoCode(p.id, p.category);
+  const also = caption?.also ?? [];
   return {
     ...p,
-    title: caption?.title ?? (p.category === "design-library" ? designCode(p.id) : "Alpha Art & Crafts piece"),
-    also: caption?.also ?? [],
+    title: caption?.title ?? (p.category === "design-library" ? `Relief design ${code}` : "Alpha Art & Crafts piece"),
+    code,
+    also,
+    tags: [p.category, ...also],
   };
 });
 
-/** "design-07" -> "AAC-D07" — a short code customers can quote on WhatsApp. */
-export function designCode(id: string) {
-  return `AAC-D${id.replace(/\D/g, "").padStart(2, "0")}`;
+/** Where a photo lives on the site — used for share links and the shortlist message. */
+export function photoPath(photo: Photo) {
+  return `${photo.category === "design-library" ? "/design-library/" : "/work/"}?view=${photo.id}`;
 }
 
 export function getPhoto(id: string) {

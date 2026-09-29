@@ -40,10 +40,19 @@ Open http://localhost:3000.
 Edit `src/data/site.ts`. Empty values (email, address, Instagram…) are hidden on the site automatically.
 **Set `url` to the real domain before going live** — it is used for SEO, the sitemap and link previews.
 
-### Change how many photos load per "Show more" tap
+### Galleries, codes and the shortlist
 
-Galleries show two rows at a time: 4 photos on phones, 6 on tablets, 8 on desktop. Change
-`MOBILE_BATCH` / `BATCH_QUERIES` at the top of `src/components/Gallery.tsx`.
+- Galleries are paged (Prev / Next, or swipe on phones): 4 photos per page on phones, 6 on tablets,
+  8 on desktop. Change `MOBILE_PAGE_SIZE` / `PAGE_QUERIES` at the top of `src/components/Gallery.tsx`.
+- Every photo gets a code customers can quote: `AAC-R05` = Religious Art #5. Letters: R religious,
+  W wall panels, E doors & entryways, F furniture, L lifestyle, S workshop, D design library
+  (`codePrefix` in `src/data/gallery.ts`). Codes come from the file number, so don't renumber files.
+- Design Library themes (Florals, Branches, Abstract, Motifs) are set per design with `also: ["florals"]`
+  in `captions` in `src/data/gallery.ts` — new designs need one to appear under a theme.
+- Page, filter and open photo live in the address (`?page=2&filter=florals&view=design-04`), so links
+  can be shared and the phone's Back button closes the full-screen viewer.
+- Visitors' shortlist (♡) is stored in their own browser only — it is never sent anywhere until they
+  press "Send shortlist on WhatsApp".
 
 ### Change collection names, descriptions or cover photos
 

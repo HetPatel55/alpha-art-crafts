@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import MobileNav from "@/components/MobileNav";
+import ShortlistBar from "@/components/ShortlistBar";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -87,6 +88,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Footer />
         <WhatsAppFab />
         <MobileNav />
+        <ShortlistBar />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
