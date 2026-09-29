@@ -22,6 +22,14 @@ export default function Header() {
   // The menu remembers which page it was opened on, so navigating closes it.
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;
+  // Desktop Collections dropdown opens on hover/focus; after picking a collection it stays
+  // closed until the pointer leaves, otherwise hover + the focused link would keep it open.
+  const [dropdownDismissed, setDropdownDismissed] = useState(false);
+
+  function dismissDropdown() {
+    setDropdownDismissed(true);
+    (document.activeElement as HTMLElement | null)?.blur();
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -52,20 +60,28 @@ export default function Header() {
           <Logo />
 
           <nav className="hidden items-center gap-9 lg:flex" aria-label="Main">
-            <div className="group relative">
+            <div className="group relative" onMouseLeave={() => setDropdownDismissed(false)}>
               <Link
                 href="/work/"
                 className={`py-6 text-sm font-medium tracking-wide ${pathname.startsWith("/collections") ? "text-clay" : ""}`}
               >
                 Collections
               </Link>
-              <div className="invisible absolute top-full left-1/2 w-72 -translate-x-1/2 translate-y-2 opacity-0 transition duration-300 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+              <div
+                className={`invisible absolute top-full left-1/2 w-72 -translate-x-1/2 translate-y-2 opacity-0 transition duration-300 ${
+                  dropdownDismissed
+                    ? ""
+                    : "group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+                }`}
+              >
                 <div className="rounded-2xl bg-ivory p-2 text-walnut shadow-xl ring-1 ring-walnut/5">
                   {collections.map((c) => (
                     <Link
                       key={c.slug}
                       href={`/collections/${c.slug}/`}
-                      className="flex items-baseline justify-between rounded-xl px-4 py-3 transition hover:bg-cream"
+                      onClick={dismissDropdown}
+                      aria-current={pathname.startsWith(`/collections/${c.slug}`) ? "page" : undefined}
+                      className="flex items-baseline justify-between rounded-xl px-4 py-3 transition hover:bg-cream aria-[current=page]:text-clay"
                     >
                       <span className="font-display text-lg">{c.title}</span>
                       <span className="text-xs text-umber">{c.short}</span>
