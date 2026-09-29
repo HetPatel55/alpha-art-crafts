@@ -1,0 +1,266 @@
+@import "tailwindcss";
+@import "yet-another-react-lightbox/styles.css";
+@import "yet-another-react-lightbox/plugins/captions.css";
+@import "yet-another-react-lightbox/plugins/thumbnails.css";
+
+/* Palette taken from the work itself: plaster ivory, walnut, terracotta, sage. */
+@theme {
+  --color-ivory: #f7f2eb;
+  --color-cream: #efe7dc;
+  --color-sand: #e2d5c3;
+  --color-stone: #a8998a;
+  --color-umber: #6b5647;
+  --color-walnut: #2b1f17;
+  --color-ink: #1c140f;
+  --color-clay: #a9573a;
+  --color-clay-dark: #8c4529;
+  --color-sage: #6f7f63;
+  --color-blush: #e8c9c0;
+
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    /* Room for the bottom quick-nav on phones/tablets (components/MobileNav.tsx). */
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+    background: var(--color-ivory);
+    color: var(--color-walnut);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01";
+  }
+  @media (min-width: 1024px) {
+    body {
+      padding-bottom: 0;
+    }
+  }
+  ::selection {
+    background: var(--color-clay);
+    color: var(--color-ivory);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-clay);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 88rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 768px) {
+    .container-x {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Vertical rhythm for page sections: compact on phones, generous on desktop. */
+  .section-y {
+    padding-block: 3.5rem;
+  }
+  @media (min-width: 768px) {
+    .section-y {
+      padding-block: 6rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .section-y {
+      padding-block: 8rem;
+    }
+  }
+
+  /* Horizontal swipe rail used on phones (collections, process, workshop). */
+  .rail {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1rem;
+    padding-inline: 1rem;
+    margin-inline: -1rem;
+    scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+  .rail > * {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-clay);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    padding: 0.95rem 1.6rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition:
+      background-color 0.3s var(--ease-soft),
+      color 0.3s var(--ease-soft),
+      border-color 0.3s var(--ease-soft),
+      transform 0.3s var(--ease-soft);
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn-primary {
+    background: var(--color-clay);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--color-clay-dark);
+  }
+  .btn-dark {
+    background: var(--color-walnut);
+    color: var(--color-ivory);
+  }
+  .btn-dark:hover {
+    background: var(--color-ink);
+  }
+  .btn-outline {
+    border: 1px solid currentColor;
+  }
+  .btn-outline:hover {
+    background: var(--color-walnut);
+    border-color: var(--color-walnut);
+    color: var(--color-ivory);
+  }
+  .btn-outline-light {
+    border: 1px solid rgb(255 255 255 / 0.5);
+    color: #fff;
+  }
+  .btn-outline-light:hover {
+    background: #fff;
+    color: var(--color-walnut);
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s var(--ease-soft);
+  }
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  /* Subtle paper grain so flat sections don't feel digital. */
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.35;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Scroll reveal — see components/Reveal.tsx */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.9s var(--ease-soft),
+    transform 0.9s var(--ease-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+.animate-tile-in {
+  animation: tile-in 0.6s var(--ease-soft) both;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.animate-hero-zoom {
+  animation: hero-zoom 2.4s var(--ease-soft) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-marquee,
+  .animate-hero-zoom,
+  .animate-tile-in {
+    animation: none;
+  }
+}
+
+/* Lightbox theme */
+.yarl__root {
+  --yarl__color_backdrop: rgb(20 14 10 / 0.96);
+}
+.yarl__slide_title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+/* Lightbox on phones: slimmer thumbnail strip */
+@media (max-width: 767px) {
+  .yarl__thumbnails_container {
+    padding-block: 8px;
+  }
+  .yarl__slide_title {
+    font-size: 1.05rem;
+  }
+}

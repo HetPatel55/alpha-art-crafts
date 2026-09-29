@@ -1,0 +1,31 @@
+{
+  "name": "alpha-arts-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "images": "node scripts/build-images.mjs",
+    "predev": "npm run images",
+    "dev": "next dev",
+    "prebuild": "npm run images",
+    "build": "next build",
+    "preview": "npx serve out",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "16.3.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "sharp": "^0.35.5",
+    "yet-another-react-lightbox": "^3.32.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.7",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
