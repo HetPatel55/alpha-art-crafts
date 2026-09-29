@@ -44,8 +44,8 @@ export default async function CollectionPage({ params }: PageProps<"/collections
         </div>
       </section>
 
-      <section className="grain bg-cream pt-6 lg:pt-36">
-        <div className="container-x grid items-end gap-10 pb-8 lg:grid-cols-[1.2fr_1fr] lg:gap-20 lg:pb-20">
+      <section className="grain bg-cream pt-6 lg:pt-28">
+        <div className="container-x grid items-center gap-10 pb-8 lg:grid-cols-[1.3fr_1fr] lg:gap-20 lg:pb-14">
           <Reveal>
             <nav aria-label="Breadcrumb" className="text-xs font-medium tracking-wide text-umber">
               <Link href="/work/" className="hover:text-clay">Our work</Link>
@@ -53,7 +53,7 @@ export default async function CollectionPage({ params }: PageProps<"/collections
               <span>{collection.title}</span>
             </nav>
             <p className="eyebrow mt-8 hidden lg:block">{collection.tagline}</p>
-            <h2 className="mt-4 hidden font-display text-7xl leading-[1.02] font-medium lg:block">{collection.title}</h2>
+            <h2 className="mt-4 hidden font-display text-6xl leading-[1.02] font-medium lg:block xl:text-7xl">{collection.title}</h2>
             <p className="mt-4 max-w-xl text-[0.95rem] leading-relaxed text-umber lg:mt-6 lg:text-lg">{collection.intro}</p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:mt-9">
               <a
@@ -66,7 +66,11 @@ export default async function CollectionPage({ params }: PageProps<"/collections
               </a>
             </div>
           </Reveal>
-          <Reveal delay={150} className="relative hidden aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-3xl lg:block">
+          {/* Height is capped so the title and intro always fit on screen beside it. */}
+          <Reveal
+            delay={150}
+            className="relative hidden h-[min(calc(100svh-10rem),600px)] w-full max-w-[480px] justify-self-end overflow-hidden rounded-t-[999px] rounded-b-3xl lg:block"
+          >
             <Photo photo={cover} fill sizes="40vw" className="object-cover" />
           </Reveal>
         </div>
